@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premiere Spider-Man x Pulsar · Grupo UMA</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #0a0a0c;
+      --bg-panel: #131316;
+      --red: #c0392b;
+      --red-deep: #7a1f16;
+      --teal: #0e3b4a;
+      --ink: #f4f1ea;
+      --muted: #9a9a9f;
+      --line: rgba(244,241,234,0.12);
+      --green: #27ae60;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .premiere-wrap {
+      background:
+        radial-gradient(1200px 600px at 15% -10%, rgba(192,57,43,0.25), transparent 60%),
+        radial-gradient(1000px 500px at 100% 10%, rgba(14,59,74,0.35), transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 30px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .premiere-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(244,241,234,0.045) 1px, transparent 1px);
+      background-size: 14px 14px;
+      opacity: 0.5;
+    }
+
+    .premiere-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header controls / status bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(244,241,234,0.05);
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .status-badge:hover {
+      background: rgba(244,241,234,0.1);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #f39c12;
+    }
+    .status-dot.active {
+      background-color: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: rgba(244,241,234,0.05);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-icon:hover {
+      background: rgba(244,241,234,0.12);
+      border-color: rgba(244,241,234,0.3);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--red);
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-family: 'Anton', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      font-size: clamp(38px, 7vw, 64px);
+      line-height: 0.98;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+    .hero-title span {
+      color: var(--red);
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 540px;
+      margin: 0 0 34px;
+    }
+    .hero-sub b { color: var(--ink); }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 42px;
+    }
+    .meta-chip {
+      border: 1px solid var(--line);
+      background: rgba(244,241,234,0.03);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .meta-chip b { color: var(--red); }
+
+    .section-label {
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin: 0 0 4px;
+    }
+    .section-hint {
+      color: var(--muted);
+      font-size: 13.5px;
+      margin: 0 0 18px;
+    }
+
+    .tickets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 520px) {
+      .tickets { grid-template-columns: 1fr; }
+    }
+
+    .ticket {
+      --fill: 0%;
+      position: relative;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(244,241,234,0.045), rgba(244,241,234,0.01));
+      border-radius: 10px;
+      padding: 16px 16px 14px;
+      cursor: pointer;
+      transition: border-color .15s ease, transform .15s ease, background .15s ease;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+      user-select: none;
+    }
+    .ticket:hover:not(.is-full) { transform: translateY(-2px); border-color: rgba(192,57,43,0.5); }
+    .ticket.is-selected {
+      border-color: var(--red);
+      background: linear-gradient(180deg, rgba(192,57,43,0.16), rgba(192,57,43,0.03));
+      box-shadow: 0 0 15px rgba(192, 57, 43, 0.2);
+    }
+    .ticket.is-full {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.8);
+    }
+    .ticket-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .ticket-sala {
+      font-family: 'Anton', sans-serif;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .ticket-time {
+      font-size: 15px;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .ticket-meter {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(244,241,234,0.08);
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .ticket-meter-fill {
+      height: 100%;
+      width: var(--fill);
+      background: linear-gradient(90deg, var(--red-deep), var(--red));
+      border-radius: 999px;
+      transition: width .4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .ticket-caption {
+      font-size: 12.5px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .ticket-full-tag {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    form.premiere-form {
+      display: grid;
+      gap: 16px;
+      background: rgba(19, 19, 22, 0.6);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+    .field label {
+      display: block;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .field input, .field select {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(244,241,234,0.04);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--red);
+      background: rgba(244,241,234,0.07);
+    }
+    .field input::placeholder { color: #6b6b70; }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 520px) { .row-2 { grid-template-columns: 1fr; } }
+
+    .submit-btn {
+      margin-top: 6px;
+      border: none;
+      cursor: pointer;
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 16px 20px;
+      border-radius: 8px;
+      transition: background .15s ease, transform .1s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4);
+    }
+    .submit-btn:hover {
+      background: #e74c3c;
+      box-shadow: 0 6px 20px rgba(192, 57, 43, 0.6);
+    }
+    .submit-btn:active { transform: scale(0.99); }
+    .submit-btn:disabled {
+      background: #4a4a4d;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .form-msg {
+      font-size: 13.5px;
+      min-height: 18px;
+      color: #e74c3c;
+      font-weight: 500;
+    }
+
+    /* Confirmation Ticket Card */
+    .confirm-card {
+      border: 1px solid rgba(192,57,43,0.4);
+      border-radius: 16px;
+      padding: 32px 28px;
+      background: linear-gradient(135deg, rgba(192,57,43,0.15) 0%, rgba(14,59,74,0.2) 100%), var(--bg-panel);
+      text-align: left;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .confirm-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .confirm-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 32px;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin: 0;
+      line-height: 1;
+    }
+    .confirm-title span { color: var(--red); }
+    .confirm-body { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
+    
+    .pass-container {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 20px;
+      background: rgba(0,0,0,0.4);
+      border: 1px dashed rgba(244,241,234,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      align-items: center;
+    }
+    @media (max-width: 580px) {
+      .pass-container { grid-template-columns: 1fr; }
+      .qr-box { margin: 0 auto; }
+    }
+
+    .confirm-details {
+      display: grid;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .confirm-details div { display: flex; justify-content: space-between; gap: 10px; }
+    .confirm-details b { color: var(--ink); text-align: right; }
+    .confirm-details span:first-child { color: var(--muted); }
+
+    .qr-box {
+      text-align: center;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .qr-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .qr-code-text {
+      color: #000;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 4px;
+      font-family: monospace;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: rgba(244,241,234,0.08);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(244,241,234,0.15);
+    }
+
+    .footnote {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #5c5c60;
+      text-align: center;
+    }
+
+    .loading-dot {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      position: relative;
+    }
+    .modal-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 24px;
+      margin: 0 0 12px;
+      color: var(--ink);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .code-block {
+      background: #000;
+      color: #a6e22e;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      margin: 14px 0;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .modal-step {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .modal-step b { color: var(--ink); }
+  </style>
+</head>
+<body>
+
+<div class="premiere-wrap">
+  <div class="premiere-inner">
+    
+    <!-- Top Settings & Status Navigation (Oculto por defecto para usuarios finales. Activar agregando ?admin=true a la URL) -->
+    <div class="top-bar" id="admin-top-bar" style="display: none;">
+      <div class="status-badge" id="sheets-status-badge" title="Estado de Google Sheets">
+        <span class="status-dot" id="sheets-status-dot"></span>
+        <span id="sheets-status-text">Google Sheets: Conectado</span>
+      </div>
+      <div class="admin-actions">
+        <button class="btn-icon" id="btn-open-config">⚙️ Conectar Sheet</button>
+        <button class="btn-icon" id="btn-open-admin">📋 Ver Lista (<span id="count-total-badge">0</span>)</button>
+      </div>
+    </div>
+
+    <div class="eyebrow">Grupo UMA · Medellín</div>
+    <h1 class="hero-title">Los héroes de<br><span>las calles</span> tienen premiere</h1>
+    <p class="hero-sub">Como parte de la alianza <b>Pulsar x Spider-Man</b>, te invitamos a una función exclusiva, solo para el equipo de Grupo UMA Medellín. Elige el horario que más se ajuste a ti y asegura tu cupo.</p>
+
+    <div class="meta-row">
+      <div class="meta-chip">📍 <b>Cinemark</b> — C.C. El Tesoro, Medellín</div>
+      <div class="meta-chip">📅 <b>6 de agosto</b></div>
+      <div class="meta-chip">🍿 Crispetas y gaseosa incluidas</div>
+      <div class="meta-chip">🕷️ Foto con Spider-Man</div>
+    </div>
+
+    <div id="premiere-app">
+      <p class="loading-dot" id="premiere-loading">Cargando cupos disponibles...</p>
+    </div>
+
+    <p class="footnote">Cupos limitados por sala. Tu inscripción se confirma al instante.</p>
+  </div>
+</div>
+
+<!-- Modal: Configuración de Google Sheets -->
+<div class="modal-overlay" id="modal-config">
+  <div class="modal-content">
+    <button class="modal-close" id="close-modal-config">&times;</button>
+    <h3 class="modal-title">🔗 Conectar con Google Sheets</h3>
+    <p class="modal-step">Para guardar automáticamente los registros y descontar cupos en tiempo real en un <b>Google Sheet</b>, sigue estos sencillos pasos:</p>
+
+    <div class="modal-step">
+      <b>Paso 1:</b> Abre tu hoja de cálculo en Google Sheets.<br>
+      <b>Paso 2:</b> En el menú superior, ve a <i>Extensiones &gt; Apps Script</i>.<br>
+      <b>Paso 3:</b> Borra el código existente, pega el siguiente código y presiona Guardar (💾):
+    </div>
+
+    <div class="code-block" id="script-code-text">function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["ID Reserva", "Fecha/Hora", "Nombre", "Cédula", "Área", "Email", "Teléfono", "Sala", "Horario"]);
+    }
+    sheet.appendRow([
+      data.id || "",
+      data.timestamp || new Date().toLocaleString(),
+      data.name || "",
+      data.cedula || "",
+      data.area || "",
+      data.email || "",
+      data.phone || "",
+      data.salaLabel || "",
+      data.time || ""
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) {
+    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  }
+  var data = [];
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    data.push({
+      id: row[0],
+      timestamp: row[1],
+      name: row[2],
+      cedula: row[3],
+      area: row[4],
+      email: row[5],
+      phone: row[6],
+      sala: row[7] ? row[7].toString().replace("Sala ", "") : "",
+      time: row[8]
+    });
+  }
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}</div>
+
+    <button class="btn-secondary" style="width:100%; margin-bottom: 16px;" id="btn-copy-code">📋 Copiar Código Apps Script</button>
+
+    <div class="modal-step">
+      <b>Paso 4:</b> En Apps Script haz clic en <i>Implantar &gt; Nueva implantación</i>.<br>
+      <b>Paso 5:</b> Selecciona el tipo <i>Aplicación Web</i>, en "Quién tiene acceso" selecciona <b>Cualquier persona (Anyone)</b> y haz clic en Implementar.<br>
+      <b>Paso 6:</b> Copia la <i>URL de la aplicación web</i> y pégala aquí abajo:
+    </div>
+
+    <div class="field" style="margin-top: 10px;">
+      <label for="input-gsheet-url">URL de Aplicación Web (Google Apps Script)</label>
+      <input type="url" id="input-gsheet-url" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" />
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="submit-btn" style="flex:1;" id="btn-save-sheet-url">Guardar y Sincronizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Admin View / Lista de Reservas -->
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal-content" style="max-width: 750px;">
+    <button class="modal-close" id="close-modal-admin">&times;</button>
+    <h3 class="modal-title">📋 Registro de Inscritos</h3>
+    <p class="modal-step">Resumen general de cupos ocupados y lista de asistentes registrados.</p>
+
+    <div id="admin-summary" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:20px;">
+      <!-- Dynamic summary chips -->
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <b style="font-size:14px; color:var(--ink);">Asistentes (<span id="admin-total-count">0</span>)</b>
+      <button class="btn-icon" id="btn-export-csv">📥 Descargar CSV</button>
+    </div>
+
+    <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left;">
+        <thead style="background: rgba(244,241,234,0.05); color: var(--muted); position: sticky; top: 0;">
+          <tr>
+            <th style="padding: 10px;">Nombre</th>
+            <th style="padding: 10px;">Cédula</th>
+            <th style="padding: 10px;">Área</th>
+            <th style="padding: 10px;">Sala</th>
+          </tr>
+        </thead>
+        <tbody id="admin-table-body">
+          <!-- Rows will render here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const CAPACITY = {
+    "1":  { label: "Sala 1",  time: "9:00 a.m.",  capacity: 104 },
+    "7":  { label: "Sala 7",  time: "9:20 a.m.",  capacity: 94  },
+    "9":  { label: "Sala 9",  time: "9:40 a.m.",  capacity: 114 },
+    "10": { label: "Sala 10", time: "10:00 a.m.", capacity: 94  },
+  };
+
+  const DEFAULT_GSHEET_URL = "https://script.google.com/macros/s/AKfycbwOeqYu52toUZM1j7cA_qX7WiQ0J9cWeW3Fcf4-Ue0xcFPiUrMxT9ghAsG6cMEzTzU/exec";
+  const LOCAL_STORAGE_REGISTRATIONS = "premiere-spiderman-registrations-v2";
+  const LOCAL_STORAGE_GSHEET_URL = "premiere-spiderman-gsheet-url";
+
+  const app = document.getElementById("premiere-app");
+  let registrations = [];
+  let selectedSala = null;
+  let gsheetUrl = localStorage.getItem(LOCAL_STORAGE_GSHEET_URL) || DEFAULT_GSHEET_URL;
+
+  async function loadRegistrations() {
+    // 1. First load from Local Storage for instantaneous speed
+    try {
+      const stored = localStorage.getItem(LOCAL_STORAGE_REGISTRATIONS);
+      if (stored) {
+        registrations = JSON.parse(stored);
+      }
+    } catch (e) {
+      registrations = [];
+    }
+
+    // 2. Sync with configured Google Sheet Web App
+    if (gsheetUrl) {
+      try {
+        updateSheetsBadge("loading", "Sincronizando con Sheet...");
+        const response = await fetch(gsheetUrl);
+        if (response.ok) {
+          const remoteData = await response.json();
+          if (Array.isArray(remoteData)) {
+            // Merge remote and local without duplicates
+            const remoteMap = new Map();
+            remoteData.forEach(r => { if (r && r.id) remoteMap.set(r.id, r); });
+            registrations.forEach(r => { if (r && r.id && !remoteMap.has(r.id)) remoteMap.set(r.id, r); });
+            
+            registrations = Array.from(remoteMap.values());
+            localStorage.setItem(LOCAL_STORAGE_REGISTRATIONS, JSON.stringify(registrations));
+            updateSheetsBadge("connected", "Google Sheets Conectado");
+          }
+        }
+      } catch (err) {
+        console.warn("Could not sync from Google Sheet URL, using local data.", err);
+        updateSheetsBadge("error", "Error Sync Google Sheet");
+      }
+    } else {
+      updateSheetsBadge("none", "Google Sheets: No configurado");
+    }
+
+    updateHeaderBadge();
+  }
+
+  function countsBySala() {
+    const counts = { "1": 0, "7": 0, "9": 0, "10": 0 };
+    registrations.forEach(r => {
+      if (!r || !r.sala) return;
+      // Normalizing room format (extract numbers: "Sala 1" -> "1")
+      let s = r.sala.toString().replace(/[^0-9]/g, "").trim();
+      if (counts[s] !== undefined) {
+        counts[s]++;
+      }
+    });
+    return counts;
+  }
+
+  function updateSheetsBadge(state, text) {
+    const dot = document.getElementById("sheets-status-dot");
+    const textEl = document.getElementById("sheets-status-text");
+    if (textEl) textEl.textContent = text;
+    if (!dot) return;
+
+    if (state === "connected") {
+      dot.className = "status-dot active";
+    } else if (state === "loading") {
+      dot.className = "status-dot";
+      dot.style.backgroundColor = "#f1c40f";
+    } else if (state === "error") {
+      dot.className = "status-dot";
+      dot.style.backgroundColor = "#e74c3c";
+    } else {
+      dot.className = "status-dot";
+      dot.style.backgroundColor = "#95a5a6";
+    }
+  }
+
+  function updateHeaderBadge() {
+    const badge = document.getElementById("count-total-badge");
+    if (badge) badge.textContent = registrations.length;
+  }
+
+  function checkAdminMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const topBar = document.getElementById("admin-top-bar");
+    if (urlParams.has("admin") && urlParams.get("admin") === "true") {
+      if (topBar) topBar.style.display = "flex";
+    } else {
+      if (topBar) topBar.style.display = "none";
+    }
+  }
+
+  function render() {
+    const counts = countsBySala();
+
+    const ticketsHtml = Object.keys(CAPACITY).map(salaId => {
+      const info = CAPACITY[salaId];
+      const used = counts[salaId] || 0;
+      const available = Math.max(0, info.capacity - used);
+      const isFull = available <= 0;
+      const pct = Math.min(100, Math.round((used / info.capacity) * 100));
+      const selectedClass = selectedSala === salaId ? "is-selected" : "";
+      const fullClass = isFull ? "is-full" : "";
+
+      return `
+        <div class="ticket ${selectedClass} ${fullClass}" data-sala="${salaId}">
+          <div class="ticket-top">
+            <div class="ticket-sala">${info.label}</div>
+            <div class="ticket-time">${info.time}</div>
+          </div>
+          <div class="ticket-meter"><div class="ticket-meter-fill" style="--fill:${pct}%"></div></div>
+          <div class="ticket-caption">
+            <span>${used}/${info.capacity} cupos (${available} disponibles)</span>
+            <span class="${isFull ? 'ticket-full-tag' : ''}">${isFull ? "Agotado" : pct + "% lleno"}</span>
+          </div>
+        </div>`;
+    }).join("");
+
+    app.innerHTML = `
+      <p class="section-label">1. Elige tu horario</p>
+      <p class="section-hint">Todas las salas verán la misma función. Escoge el horario que mejor se acomode a ti.</p>
+      <div class="tickets">${ticketsHtml}</div>
+
+      <p class="section-label">2. Tus datos</p>
+      <p class="section-hint">Los usaremos para confirmar tu asistencia y coordinar tu combo de crispetas.</p>
+      <form class="premiere-form" id="premiere-form">
+        <div class="row-2">
+          <div class="field">
+            <label for="p-name">Nombre completo *</label>
+            <input id="p-name" type="text" placeholder="Como aparece en tu cédula" required />
+          </div>
+          <div class="field">
+            <label for="p-cedula">Cédula / Documento *</label>
+            <input id="p-cedula" type="text" placeholder="Número de documento" required />
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="p-area">Área / Tienda UMA *</label>
+            <input id="p-area" type="text" placeholder="Ej: Tienda UMA Poblado, Administrativo..." required />
+          </div>
+          <div class="field">
+            <label for="p-phone">WhatsApp / Celular *</label>
+            <input id="p-phone" type="tel" placeholder="3001234567" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-email">Correo corporativo *</label>
+          <input id="p-email" type="email" placeholder="nombre@grupouma.com" required />
+        </div>
+        <p class="form-msg" id="premiere-msg"></p>
+        <button type="submit" class="submit-btn" id="premiere-submit">Reservar mi lugar de héroe</button>
+      </form>
+    `;
+
+    // Ticket selection event handlers
+    document.querySelectorAll(".ticket").forEach(el => {
+      el.addEventListener("click", () => {
+        const salaId = el.getAttribute("data-sala");
+        const info = CAPACITY[salaId];
+        const used = countsBySala()[salaId] || 0;
+        if (used >= info.capacity) return;
+        selectedSala = salaId;
+        render();
+      });
+    });
+
+    document.getElementById("premiere-form").addEventListener("submit", handleSubmit);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const msgEl = document.getElementById("premiere-msg");
+    const btn = document.getElementById("premiere-submit");
+    const name = document.getElementById("p-name").value.trim();
+    const cedula = document.getElementById("p-cedula").value.trim();
+    const area = document.getElementById("p-area").value.trim();
+    const phone = document.getElementById("p-phone").value.trim();
+    const email = document.getElementById("p-email").value.trim();
+
+    if (!selectedSala) {
+      msgEl.textContent = "Por favor selecciona un horario de función antes de continuar.";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Verificando y reservando cupo...";
+    msgEl.textContent = "";
+
+    try {
+      // Re-fetch latest capacity from storage/sheet to prevent overbooking
+      await loadRegistrations();
+      const counts = countsBySala();
+      const info = CAPACITY[selectedSala];
+
+      if ((counts[selectedSala] || 0) >= info.capacity) {
+        msgEl.textContent = "¡Lo sentimos! Los cupos para esta sala se acaban de agotar. Elige otra sala disponible.";
+        btn.disabled = false;
+        btn.textContent = "Reservar mi lugar de héroe";
+        render();
+        return;
+      }
+
+      const entry = {
+        id: "UMA-" + Math.floor(100000 + Math.random() * 900000),
+        name,
+        cedula,
+        area,
+        phone,
+        email,
+        sala: selectedSala,
+        salaLabel: info.label,
+        time: info.time,
+        timestamp: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
+      };
+
+      // Save locally first
+      registrations.push(entry);
+      localStorage.setItem(LOCAL_STORAGE_REGISTRATIONS, JSON.stringify(registrations));
+      updateHeaderBadge();
+
+      // Post to Google Sheet if configured
+      if (gsheetUrl) {
+        try {
+          fetch(gsheetUrl, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry)
+          });
+        } catch (err) {
+          console.warn("Background POST to Google Sheets failed, but saved locally.", err);
+        }
+      }
+
+      showConfirmation(entry);
+
+    } catch (err) {
+      msgEl.textContent = "Ocurrió un problema al procesar tu inscripción. Inténtalo nuevamente.";
+      btn.disabled = false;
+      btn.textContent = "Reservar mi lugar de héroe";
+    }
+  }
+
+  function showConfirmation(entry) {
+    const info = CAPACITY[entry.sala];
+    const qrData = encodeURIComponent(`PREMIERE-UMA|ID:${entry.id}|NAME:${entry.name}|DOC:${entry.cedula}|SALA:${info.label}`);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
+
+    app.innerHTML = `
+      <div class="confirm-card">
+        <div class="confirm-header">
+          <p class="confirm-title">¡Bienvenido, <span>héroe</span>!</p>
+        </div>
+        <p class="confirm-body">Tu cupo exclusivo para la premiere de <b>Spider-Man</b> con Grupo UMA ha sido reservado con éxito. Presenta este pase digital al ingresar al cine.</p>
+        
+        <div class="pass-container">
+          <div class="confirm-details">
+            <div><span>ID Reserva</span><b>${entry.id}</b></div>
+            <div><span>Asistente</span><b>${entry.name}</b></div>
+            <div><span>Cédula</span><b>${entry.cedula}</b></div>
+            <div><span>Área / Tienda</span><b>${entry.area}</b></div>
+            <div><span>Sala</span><b>${info.label}</b></div>
+            <div><span>Horario</span><b>${info.time}</b></div>
+            <div><span>Lugar</span><b>Cinemark - C.C. El Tesoro</b></div>
+          </div>
+          <div class="qr-box">
+            <img src="${qrUrl}" alt="Código QR de Confirmación" />
+            <div class="qr-code-text">${entry.id}</div>
+          </div>
+        </div>
+
+        <div class="confirm-actions">
+          <button class="submit-btn" style="flex:1;" onclick="window.print()">🖨️ Imprimir / Guardar Pase</button>
+          <button class="btn-secondary" id="btn-new-reservation">Hacer otra reserva</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("btn-new-reservation").addEventListener("click", () => {
+      selectedSala = null;
+      render();
+    });
+  }
+
+  function setupModals() {
+    const modalConfig = document.getElementById("modal-config");
+    const modalAdmin = document.getElementById("modal-admin");
+
+    document.getElementById("btn-open-config").addEventListener("click", () => {
+      document.getElementById("input-gsheet-url").value = gsheetUrl;
+      modalConfig.classList.add("active");
+    });
+
+    document.getElementById("sheets-status-badge").addEventListener("click", () => {
+      document.getElementById("input-gsheet-url").value = gsheetUrl;
+      modalConfig.classList.add("active");
+    });
+
+    document.getElementById("close-modal-config").addEventListener("click", () => {
+      modalConfig.classList.remove("active");
+    });
+
+    document.getElementById("btn-save-sheet-url").addEventListener("click", async () => {
+      const url = document.getElementById("input-gsheet-url").value.trim();
+      gsheetUrl = url;
+      localStorage.setItem(LOCAL_STORAGE_GSHEET_URL, url);
+      modalConfig.classList.remove("active");
+      await loadRegistrations();
+      render();
+    });
+
+    document.getElementById("btn-copy-code").addEventListener("click", () => {
+      const code = document.getElementById("script-code-text").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById("btn-copy-code");
+        btn.textContent = "✅ ¡Código Copiado!";
+        setTimeout(() => btn.textContent = "📋 Copiar Código Apps Script", 2000);
+      });
+    });
+
+    // Admin view
+    document.getElementById("btn-open-admin").addEventListener("click", () => {
+      renderAdminModal();
+      modalAdmin.classList.add("active");
+    });
+
+    document.getElementById("close-modal-admin").addEventListener("click", () => {
+      modalAdmin.classList.remove("active");
+    });
+
+    document.getElementById("btn-export-csv").addEventListener("click", exportCSV);
+  }
+
+  function renderAdminModal() {
+    const counts = countsBySala();
+    const summaryContainer = document.getElementById("admin-summary");
+    summaryContainer.innerHTML = Object.keys(CAPACITY).map(salaId => {
+      const info = CAPACITY[salaId];
+      const used = counts[salaId] || 0;
+      return `
+        <div style="background:rgba(244,241,234,0.04); padding:10px; border-radius:8px; border:1px solid var(--line);">
+          <div style="font-size:11px; color:var(--muted);">${info.label} (${info.time})</div>
+          <div style="font-size:18px; font-weight:bold; color:var(--red);">${used} / ${info.capacity}</div>
+        </div>
+      `;
+    }).join("");
+
+    document.getElementById("admin-total-count").textContent = registrations.length;
+
+    const tbody = document.getElementById("admin-table-body");
+    if (registrations.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="padding:15px; text-align:center; color:var(--muted);">Aún no hay inscripciones registradas.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = registrations.map(r => `
+      <tr style="border-top:1px solid var(--line);">
+        <td style="padding:8px 10px; color:var(--ink); font-weight:600;">${r.name || '-'}</td>
+        <td style="padding:8px 10px; color:var(--muted);">${r.cedula || '-'}</td>
+        <td style="padding:8px 10px; color:var(--muted);">${r.area || '-'}</td>
+        <td style="padding:8px 10px; color:var(--red); font-weight:600;">Sala ${r.sala || '-'}</td>
+      </tr>
+    `).join("");
+  }
+
+  function exportCSV() {
+    if (registrations.length === 0) return;
+    const headers = ["ID", "Fecha", "Nombre", "Cedula", "Area", "Email", "Telefono", "Sala", "Horario"];
+    const csvRows = [headers.join(",")];
+
+    registrations.forEach(r => {
+      const salaInfo = CAPACITY[r.sala] || { label: "Sala " + r.sala, time: r.time || "" };
+      const row = [
+        `"${r.id || ''}"`,
+        `"${r.timestamp || ''}"`,
+        `"${r.name || ''}"`,
+        `"${r.cedula || ''}"`,
+        `"${r.area || ''}"`,
+        `"${r.email || ''}"`,
+        `"${r.phone || ''}"`,
+        `"${salaInfo.label}"`,
+        `"${salaInfo.time}"`
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Inscritos_Premiere_UMA_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  async function init() {
+    checkAdminMode();
+    setupModals();
+    await loadRegistrations();
+    render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
