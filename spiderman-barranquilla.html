@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserva Cine Barranquilla - Grupo UMA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="bg-red-600 text-white p-2 rounded-xl font-black text-xl tracking-wider">UMA</div>
+        <div>
+          <h1 class="font-bold text-lg leading-none">Evento Exclusivo Cine</h1>
+          <p class="text-xs text-slate-400">Barranquilla - Cinemark C.C. Buenavista</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <span id="seatsBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          Cargando cupos...
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full">
+    
+    <!-- Hero / Event Info -->
+    <div class="bg-gradient-to-r from-red-900/40 via-slate-900 to-slate-900 rounded-3xl p-6 md:p-8 border border-red-500/20 shadow-2xl mb-8 relative overflow-hidden">
+      <div class="relative z-10 max-w-2xl">
+        <span class="px-3 py-1 bg-red-500/20 border border-red-500/40 text-red-300 rounded-lg text-xs font-bold uppercase tracking-wider mb-3 inline-block">Función Especial</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-white">Función Premier UMA</h2>
+        <p class="text-slate-300 text-sm md:text-base mb-6">Acompáñanos a disfrutar de una noche de cine exclusiva para la familia Grupo UMA en Barranquilla.</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm">
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-slate-400 text-xs">Ubicación</p>
+            <p class="font-bold text-white">Cinemark Buenavista</p>
+          </div>
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-slate-400 text-xs">Fecha</p>
+            <p class="font-bold text-white">Lunes 24 de Agosto</p>
+          </div>
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-slate-400 text-xs">Hora</p>
+            <p class="font-bold text-white">7:00 PM</p>
+          </div>
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-slate-400 text-xs">Sala</p>
+            <p class="font-bold text-white">Sala 1 (86 cupos)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de Registro -->
+    <div id="formContainer" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-xl max-w-2xl mx-auto">
+      <h3 class="text-xl font-bold text-white mb-1">Formulario de Inscripción</h3>
+      <p class="text-xs text-slate-400 mb-6">Completa tus datos corporativos para reservar tu boleto de entrada.</p>
+
+      <form id="bookingForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre Completo *</label>
+          <input type="text" id="nombre" required placeholder="Ej: Miguel Oviedo" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Cédula de Ciudadanía *</label>
+            <input type="number" id="cedula" required placeholder="Ej: 1024557976" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Área / Dependencia *</label>
+            <input type="text" id="area" required placeholder="Ej: Administrativo / Comercial" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Corporativo *</label>
+            <input type="email" id="email" required placeholder="ejemplo@grupouma.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Celular / Teléfono *</label>
+            <input type="tel" id="telefono" required placeholder="Ej: 3001234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-red-600/30 transition duration-200 mt-4 flex justify-center items-center gap-2">
+          <span>Confirmar Reserva de Boleto</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Pase Digital de Entrada (Se activa al enviar) -->
+    <div id="ticketContainer" class="hidden max-w-md mx-auto">
+      <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="bg-red-600 px-6 py-4 text-center text-white">
+          <p class="text-xs font-bold uppercase tracking-widest text-red-100">Grupo UMA • Pase Digital</p>
+          <h3 class="text-xl font-black">ENTRADA CINE Premier</h3>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <div class="text-center pb-4 border-b border-slate-700">
+            <span class="text-xs text-slate-400">Código de Reserva</span>
+            <p id="ticketId" class="text-2xl font-mono font-extrabold text-red-400">UMA-000000</p>
+          </div>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Asistente:</span>
+              <span id="ticketNombre" class="font-bold text-white text-right">---</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Cédula:</span>
+              <span id="ticketCedula" class="font-bold text-slate-200">---</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Cine:</span>
+              <span class="font-bold text-slate-200">Cinemark Buenavista</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Fecha & Hora:</span>
+              <span class="font-bold text-slate-200">24 Ago - 7:00 PM</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Sala:</span>
+              <span class="font-bold text-emerald-400">Sala 1</span>
+            </div>
+          </div>
+
+          <div class="pt-4 text-center flex flex-col items-center justify-center border-t border-slate-700">
+            <div class="bg-white p-3 rounded-2xl shadow-inner mb-2">
+              <img id="qrImage" src="" alt="Código QR" class="w-36 h-36">
+            </div>
+            <p class="text-xs text-slate-400">Presenta este código QR en la entrada del cine</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 px-6 py-4 border-t border-slate-800 text-center">
+          <button onclick="window.print()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2 rounded-lg border border-slate-700 transition">
+            🖨️ Imprimir / Guardar Ticket
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-900 py-4 text-center text-xs text-slate-500">
+    &copy; 2026 Grupo UMA - Evento Exclusivo Cine Barranquilla
+  </footer>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOeqYu52toUZM1j7cA_qX7WiQ0J9cWeW3Fcf4-Ue0xcFPiUrMxT9ghAsG6cMEzTzU/exec";
+    const TOTAL_SEATS = 86;
+
+    let availableSeats = TOTAL_SEATS;
+
+    document.addEventListener("DOMContentLoaded", fetchRemainingSeats);
+
+    async function fetchRemainingSeats() {
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getSeats`);
+        const data = await response.json();
+        
+        if (data && typeof data.occupiedSeats === 'number') {
+          availableSeats = Math.max(0, TOTAL_SEATS - data.occupiedSeats);
+        }
+      } catch (error) {
+        console.warn("Error cargando aforo en vivo:", error);
+      } finally {
+        updateSeatsBadge();
+      }
+    }
+
+    function updateSeatsBadge() {
+      const badge = document.getElementById("seatsBadge");
+      if (availableSeats > 0) {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> ${availableSeats} Cupos Disponibles`;
+      } else {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20";
+        badge.innerHTML = `⚠️ Aforo Agotado (86/86)`;
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("submitBtn").innerText = "Cupos Agotados";
+        document.getElementById("submitBtn").className = "w-full bg-slate-800 text-slate-500 font-bold py-3.5 px-6 rounded-xl cursor-not-allowed";
+      }
+    }
+
+    document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      if (availableSeats <= 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Cupos agotados',
+          text: 'Lo sentimos, ya no hay cupos disponibles para esta función.',
+          confirmButtonColor: '#dc2626'
+        });
+        return;
+      }
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>Procesando Reserva...</span>`;
+
+      const idReserva = "UMA-" + Math.floor(100000 + Math.random() * 900000);
+      const nombre = document.getElementById("nombre").value.trim();
+      const cedula = document.getElementById("cedula").value.trim();
+      const area = document.getElementById("area").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+
+      const payload = {
+        idReserva,
+        nombre,
+        cedula,
+        area,
+        email,
+        telefono,
+        sala: "Sala 1",
+        horario: "7:00 p.m.",
+        ciudad: "Barranquilla"
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        // Generar ticket visual con QR
+        document.getElementById("ticketId").innerText = idReserva;
+        document.getElementById("ticketNombre").innerText = nombre;
+        document.getElementById("ticketCedula").innerText = cedula;
+        document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(idReserva + '|' + cedula + '|' + nombre)}`;
+
+        // Ocultar formulario y mostrar el ticket
+        document.getElementById("formContainer").classList.add("hidden");
+        document.getElementById("ticketContainer").classList.remove("hidden");
+
+        availableSeats = Math.max(0, availableSeats - 1);
+        updateSeatsBadge();
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Reserva Confirmada!',
+          text: 'Tu entrada ha sido registrada exitosamente.',
+          confirmButtonColor: '#dc2626'
+        });
+
+      } catch (error) {
+        console.error("Error al registrar:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión',
+          text: 'No fue posible completar el registro. Intenta de nuevo.',
+          confirmButtonColor: '#dc2626'
+        });
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Confirmar Reserva de Boleto";
+      }
+    });
+  </script>
+</body>
+</html>
