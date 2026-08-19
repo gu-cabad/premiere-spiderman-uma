@@ -163,7 +163,7 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOeqYu52toUZM1j7cA_qX7WiQ0J9cWeW3Fcf4-Ue0xcFPiUrMxT9ghAsG6cMEzTzU/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzfqQVNCndnOqoKppHwKdqFdqLpm70em-mLmCh_uzQX8fJTReuX42CkHjBStGBDlylW/exec";
     const TOTAL_SEATS = 86;
 
     let availableSeats = TOTAL_SEATS;
@@ -239,7 +239,7 @@
         await fetch(SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(payload)
         });
 
