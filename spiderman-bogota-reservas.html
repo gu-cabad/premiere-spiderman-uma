@@ -1,0 +1,280 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
+
+.premiere-wrap {
+  --bg: #0a0a0c;
+  --red: #c0392b;
+  --red-deep: #7a1f16;
+  --ink: #f4f1ea;
+  --muted: #9a9a9f;
+  --line: rgba(244,241,234,0.12);
+
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 15% -10%, rgba(192,57,43,0.25), transparent 60%),
+    radial-gradient(1000px 500px at 100% 10%, rgba(14,59,74,0.35), transparent 55%),
+    var(--bg);
+  min-height: 100vh;
+  padding: 56px 20px 80px;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.premiere-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(244,241,234,0.045) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: 0.5;
+}
+
+.premiere-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--red); font-weight: 700; margin-bottom: 14px;
+}
+.eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--red); display: inline-block; }
+
+.hero-title {
+  font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.01em;
+  font-size: clamp(38px, 7vw, 62px); line-height: 0.98; margin: 0 0 10px; text-transform: uppercase;
+}
+.hero-title span { color: var(--red); }
+
+.hero-sub { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 540px; margin: 0 0 34px; }
+.hero-sub b { color: var(--ink); }
+
+.meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 42px; }
+.meta-chip {
+  border: 1px solid var(--line); background: rgba(244,241,234,0.03); border-radius: 999px;
+  padding: 8px 14px; font-size: 13px; color: var(--ink); display: flex; align-items: center; gap: 7px;
+}
+.meta-chip b { color: var(--red); }
+
+.section-label { font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: 15px; letter-spacing: 0.06em; color: var(--ink); margin: 0 0 4px; }
+.section-hint { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
+
+.session-card {
+  position: relative;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(244,241,234,0.05), rgba(244,241,234,0.01));
+  border-radius: 12px;
+  padding: 20px 22px 18px;
+  margin-bottom: 36px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+.session-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.session-sala { font-family: 'Anton', sans-serif; font-size: 26px; text-transform: uppercase; }
+.session-time { font-size: 16px; color: var(--red); font-weight: 700; }
+.session-meter { height: 6px; border-radius: 999px; background: rgba(244,241,234,0.08); overflow: hidden; margin-bottom: 8px; }
+.session-meter-fill { height: 100%; width: var(--fill); background: linear-gradient(90deg, var(--red-deep), var(--red)); border-radius: 999px; transition: width .3s ease; }
+.session-caption { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+.session-full-tag { color: var(--red); font-weight: 700; }
+
+form.premiere-form { display: grid; gap: 16px; }
+.field label { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 7px; }
+.field input { width: 100%; box-sizing: border-box; background: rgba(244,241,234,0.04); border: 1px solid var(--line); color: var(--ink); padding: 12px 14px; border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif; outline: none; transition: border-color .15s ease; }
+.field input:focus { border-color: var(--red); }
+.field input::placeholder { color: #6b6b70; }
+
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 520px) { .row-2 { grid-template-columns: 1fr; } }
+
+.submit-btn {
+  margin-top: 6px; border: none; cursor: pointer; background: var(--red); color: #fff;
+  font-weight: 800; font-size: 15px; letter-spacing: 0.02em; text-transform: uppercase;
+  padding: 15px 20px; border-radius: 8px; transition: background .15s ease, transform .1s ease;
+}
+.submit-btn:hover { background: #a8321f; }
+.submit-btn:active { transform: scale(0.99); }
+.submit-btn:disabled { background: #4a4a4d; cursor: not-allowed; }
+
+.form-msg { font-size: 13.5px; min-height: 18px; color: var(--red); }
+
+.confirm-card {
+  border: 1px solid var(--line); border-radius: 12px; padding: 30px 26px;
+  background: linear-gradient(180deg, rgba(192,57,43,0.12), rgba(14,59,74,0.08)); text-align: left;
+}
+.confirm-title { font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
+.confirm-title span { color: var(--red); }
+.confirm-body { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
+.confirm-details { display: grid; gap: 8px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+.confirm-details div { display: flex; justify-content: space-between; }
+.confirm-details b { color: var(--ink); }
+.confirm-details span:first-child { color: var(--muted); }
+
+.footnote { margin-top: 30px; font-size: 12px; color: #5c5c60; text-align: center; }
+.loading-dot { color: var(--muted); font-size: 13.5px; }
+</style>
+
+<div class="premiere-wrap">
+  <div class="premiere-inner">
+    <div class="eyebrow">Grupo UMA · Bogotá</div>
+    <h1 class="hero-title">Los héroes de<br><span>las calles</span> tienen función</h1>
+    <p class="hero-sub">Como parte de la alianza <b>Pulsar x Spider-Man</b>, te invitamos a una proyección exclusiva, solo para el equipo de Grupo UMA Bogotá. Inscríbete para asegurar tu cupo.</p>
+
+    <div class="meta-row">
+      <div class="meta-chip">📍 <b>Cafam Floresta Cinemark</b> — Bogotá</div>
+      <div class="meta-chip">📅 <b>Martes 25 de agosto</b></div>
+      <div class="meta-chip">🕖 <b>7:00 p.m.</b></div>
+      <div class="meta-chip">🍿 Crispetas y gaseosa incluidas</div>
+    </div>
+
+    <div id="premiere-app">
+      <p class="loading-dot" id="premiere-loading">Cargando cupos disponibles...</p>
+    </div>
+
+    <p class="footnote">Cupos limitados. Tu inscripción se confirma al instante.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbys2VNrNnqy3n-A4fost6LQTrThoTACukiQNlbO2v3ZxRl6R3GeQfsV5Nr5bUMMsf_w/exec";
+  const SESSION = { label: "Sala 2", time: "7:00 p.m.", capacity: 262 };
+  const app = document.getElementById("premiere-app");
+  let occupiedCount = 0;
+
+  async function loadRegistrations() {
+    try {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if (data && typeof data.occupiedSeats === 'number') {
+        occupiedCount = data.occupiedSeats;
+      }
+    } catch (e) {
+      console.warn("No se pudo obtener el conteo de cupos en vivo:", e);
+    }
+  }
+
+  function render() {
+    const used = occupiedCount;
+    const isFull = used >= SESSION.capacity;
+    const pct = Math.min(100, Math.round((used / SESSION.capacity) * 100));
+
+    app.innerHTML = `
+      <p class="section-label">1. Tu función</p>
+      <p class="section-hint">Única función disponible en Bogotá.</p>
+      <div class="session-card">
+        <div class="session-top">
+          <div class="session-sala">${SESSION.label}</div>
+          <div class="session-time">${SESSION.time}</div>
+        </div>
+        <div class="session-meter"><div class="session-meter-fill" style="--fill:${pct}%"></div></div>
+        <div class="session-caption">
+          <span>${used}/${SESSION.capacity} cupos reservadas</span>
+          <span class="${isFull ? 'session-full-tag' : ''}">${isFull ? "Sin cupo" : pct + "% ocupado"}</span>
+        </div>
+      </div>
+
+      <p class="section-label">2. Tus datos</p>
+      <p class="section-hint">Los usaremos solo para confirmar tu cupo y organizar el ingreso.</p>
+      <form class="premiere-form" id="premiere-form">
+        <div class="row-2">
+          <div class="field">
+            <label for="p-name">Nombre completo</label>
+            <input id="p-name" type="text" placeholder="Como aparece en tu cédula" required ${isFull ? "disabled" : ""} />
+          </div>
+          <div class="field">
+            <label for="p-area">Área / Tienda</label>
+            <input id="p-area" type="text" placeholder="Ej: Tienda UMA Floresta, Administrativo..." required ${isFull ? "disabled" : ""} />
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-email">Correo corporativo</label>
+          <input id="p-email" type="email" placeholder="nombre@grupouma.com" required ${isFull ? "disabled" : ""} />
+        </div>
+        <p class="form-msg" id="premiere-msg">${isFull ? "Ya no hay cupos disponibles para esta función." : ""}</p>
+        <button type="submit" class="submit-btn" id="premiere-submit" ${isFull ? "disabled" : ""}>${isFull ? "Sin cupo" : "Reservar mi lugar de héroe"}</button>
+      </form>
+    `;
+
+    if (!isFull) {
+      document.getElementById("premiere-form").addEventListener("submit", handleSubmit);
+    }
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const msgEl = document.getElementById("premiere-msg");
+    const btn = document.getElementById("premiere-submit");
+    const name = document.getElementById("p-name").value.trim();
+    const area = document.getElementById("p-area").value.trim();
+    const email = document.getElementById("p-email").value.trim();
+
+    if (!name || !area || !email) {
+      msgEl.textContent = "Completa todos los campos para reservar tu lugar.";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Reservando...";
+    msgEl.textContent = "";
+
+    try {
+      await loadRegistrations();
+      if (occupiedCount >= SESSION.capacity) {
+        msgEl.textContent = "Justo se acabaron los cupos de esta función.";
+        render();
+        return;
+      }
+
+      const payload = {
+        idReserva: "UMA-BOG-" + Math.floor(100000 + Math.random() * 900000),
+        nombre: name,
+        area: area,
+        email: email,
+        sala: SESSION.label,
+        horario: SESSION.time,
+        ciudad: "Bogotá"
+      };
+
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      });
+
+      occupiedCount += 1;
+      showConfirmation(payload);
+
+    } catch (err) {
+      msgEl.textContent = "Hubo un problema al guardar tu inscripción. Intenta de nuevo.";
+      btn.disabled = false;
+      btn.textContent = "Reservar mi lugar de héroe";
+    }
+  }
+
+  function showConfirmation(entry) {
+    app.innerHTML = `
+      <div class="confirm-card">
+        <p class="confirm-title">Bienvenido, <span>héroe</span>.</p>
+        <p class="confirm-body">Tu cupo para la proyección de Spider-Man en Bogotá quedó confirmado. Nos vemos el martes 25 de agosto — no llegues tarde, ni siquiera un héroe se pierde el inicio.</p>
+        <div class="confirm-details">
+          <div><span>Reserva ID</span><b>${entry.idReserva}</b></div>
+          <div><span>Nombre</span><b>${entry.nombre}</b></div>
+          <div><span>Área / Tienda</span><b>${entry.area}</b></div>
+          <div><span>Correo</span><b>${entry.email}</b></div>
+          <div><span>Sala</span><b>${entry.sala}</b></div>
+          <div><span>Horario</span><b>${entry.horario}</b></div>
+          <div><span>Lugar</span><b>Cafam Floresta Cinemark, Bogotá</b></div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function init() {
+    await loadRegistrations();
+    render();
+  }
+
+  init();
+})();
+</script>
