@@ -98,7 +98,7 @@ form.premiere-form { display: grid; gap: 16px; }
 .form-msg { font-size: 13.5px; min-height: 18px; color: var(--red); }
 
 .confirm-card {
-  border: 1px solid var(--line); border-radius: 12px; padding: 30px 26px;
+  border: 1px solid var(--line); border-radius: 16px; padding: 30px 26px;
   background: linear-gradient(180deg, rgba(192,57,43,0.12), rgba(14,59,74,0.08)); text-align: left;
 }
 .confirm-title { font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: var(--ink); margin: 0 0 8px; }
@@ -108,6 +108,26 @@ form.premiere-form { display: grid; gap: 16px; }
 .confirm-details div { display: flex; justify-content: space-between; }
 .confirm-details b { color: var(--ink); }
 .confirm-details span:first-child { color: var(--muted); }
+
+.qr-box {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--line);
+  text-align: center;
+}
+.qr-container {
+  background: #ffffff;
+  padding: 12px;
+  display: inline-block;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+}
+.qr-container img {
+  width: 160px;
+  height: 160px;
+  display: block;
+}
 
 .footnote { margin-top: 30px; font-size: 12px; color: #5c5c60; text-align: center; }
 .loading-dot { color: var(--muted); font-size: 13.5px; }
@@ -168,7 +188,7 @@ form.premiere-form { display: grid; gap: 16px; }
         </div>
         <div class="session-meter"><div class="session-meter-fill" style="--fill:${pct}%"></div></div>
         <div class="session-caption">
-          <span>${used}/${SESSION.capacity} cupos reservadas</span>
+          <span>${used}/${SESSION.capacity} cupos reservados</span>
           <span class="${isFull ? 'session-full-tag' : ''}">${isFull ? "Sin cupo" : pct + "% ocupado"}</span>
         </div>
       </div>
@@ -178,16 +198,26 @@ form.premiere-form { display: grid; gap: 16px; }
       <form class="premiere-form" id="premiere-form">
         <div class="row-2">
           <div class="field">
-            <label for="p-name">Nombre completo</label>
-            <input id="p-name" type="text" placeholder="Como aparece en tu cédula" required ${isFull ? "disabled" : ""} />
+            <label for="p-name">Nombre completo *</label>
+            <input id="p-name" type="text" placeholder="Ej: Miguel Oviedo" required ${isFull ? "disabled" : ""} />
           </div>
           <div class="field">
-            <label for="p-area">Área / Tienda</label>
-            <input id="p-area" type="text" placeholder="Ej: Tienda UMA Floresta, Administrativo..." required ${isFull ? "disabled" : ""} />
+            <label for="p-cedula">Cédula de ciudadanía *</label>
+            <input id="p-cedula" type="number" placeholder="Ej: 1024557976" required ${isFull ? "disabled" : ""} />
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="p-area">Área / Tienda *</label>
+            <input id="p-area" type="text" placeholder="Ej: Tienda UMA Floresta" required ${isFull ? "disabled" : ""} />
+          </div>
+          <div class="field">
+            <label for="p-phone">Celular / Teléfono *</label>
+            <input id="p-phone" type="tel" placeholder="Ej: 3001234567" required ${isFull ? "disabled" : ""} />
           </div>
         </div>
         <div class="field">
-          <label for="p-email">Correo corporativo</label>
+          <label for="p-email">Correo corporativo *</label>
           <input id="p-email" type="email" placeholder="nombre@grupouma.com" required ${isFull ? "disabled" : ""} />
         </div>
         <p class="form-msg" id="premiere-msg">${isFull ? "Ya no hay cupos disponibles para esta función." : ""}</p>
@@ -204,12 +234,15 @@ form.premiere-form { display: grid; gap: 16px; }
     e.preventDefault();
     const msgEl = document.getElementById("premiere-msg");
     const btn = document.getElementById("premiere-submit");
+    
     const name = document.getElementById("p-name").value.trim();
+    const cedula = document.getElementById("p-cedula").value.trim();
     const area = document.getElementById("p-area").value.trim();
+    const phone = document.getElementById("p-phone").value.trim();
     const email = document.getElementById("p-email").value.trim();
 
-    if (!name || !area || !email) {
-      msgEl.textContent = "Completa todos los campos para reservar tu lugar.";
+    if (!name || !cedula || !area || !phone || !email) {
+      msgEl.textContent = "Por favor completa todos los campos requeridos.";
       return;
     }
 
@@ -228,8 +261,10 @@ form.premiere-form { display: grid; gap: 16px; }
       const payload = {
         idReserva: "UMA-BOG-" + Math.floor(100000 + Math.random() * 900000),
         nombre: name,
+        cedula: cedula,
         area: area,
         email: email,
+        telefono: phone,
         sala: SESSION.label,
         horario: SESSION.time,
         ciudad: "Bogotá"
@@ -253,18 +288,30 @@ form.premiere-form { display: grid; gap: 16px; }
   }
 
   function showConfirmation(entry) {
+    const qrData = encodeURIComponent(`${entry.idReserva}|${entry.cedula}|${entry.nombre}`);
+    
     app.innerHTML = `
       <div class="confirm-card">
         <p class="confirm-title">Bienvenido, <span>héroe</span>.</p>
         <p class="confirm-body">Tu cupo para la proyección de Spider-Man en Bogotá quedó confirmado. Nos vemos el martes 25 de agosto — no llegues tarde, ni siquiera un héroe se pierde el inicio.</p>
+        
         <div class="confirm-details">
-          <div><span>Reserva ID</span><b>${entry.idReserva}</b></div>
+          <div><span>Reserva ID</span><b style="color:var(--red);">${entry.idReserva}</b></div>
           <div><span>Nombre</span><b>${entry.nombre}</b></div>
+          <div><span>Cédula</span><b>${entry.cedula}</b></div>
           <div><span>Área / Tienda</span><b>${entry.area}</b></div>
+          <div><span>Teléfono</span><b>${entry.telefono}</b></div>
           <div><span>Correo</span><b>${entry.email}</b></div>
           <div><span>Sala</span><b>${entry.sala}</b></div>
           <div><span>Horario</span><b>${entry.horario}</b></div>
           <div><span>Lugar</span><b>Cafam Floresta Cinemark, Bogotá</b></div>
+        </div>
+
+        <div class="qr-box">
+          <div class="qr-container">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}" alt="Código QR de Entrada" />
+          </div>
+          <p style="font-size: 12px; color: var(--muted); margin: 0;">Presenta este código QR en el ingreso de la sala</p>
         </div>
       </div>
     `;
