@@ -88,104 +88,6 @@
     padding: 24px 20px 60px;
   }
 
-  /* Barra de Estado y Conexión */
-  .config-bar {
-    background: rgba(35, 39, 88, 0.6);
-    border: 1px solid var(--uma-line);
-    backdrop-filter: blur(8px);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin-bottom: 24px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--uma-muted);
-  }
-  .config-bar .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-  }
-  .status-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--uma-green);
-    box-shadow: 0 0 8px var(--uma-green);
-    display: inline-block;
-  }
-  .status-dot.warning {
-    background: var(--uma-yellow);
-    box-shadow: 0 0 8px var(--uma-yellow);
-  }
-  .config-bar button.btn-config {
-    background: transparent;
-    color: var(--uma-muted);
-    border: 1px solid var(--uma-line);
-    border-radius: 4px;
-    padding: 4px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .config-bar button.btn-config:hover {
-    color: #fff;
-    border-color: var(--uma-white);
-  }
-
-  /* Modal de configuración rápida */
-  .config-panel {
-    background: var(--uma-navy-surface);
-    border: 1px solid var(--uma-line-light);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-  }
-  .config-panel h3 {
-    font-family: var(--font-heading);
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #fff;
-    margin-bottom: 8px;
-  }
-  .config-panel p {
-    font-size: 13px;
-    color: var(--uma-muted);
-    margin-bottom: 12px;
-  }
-  .config-input-group {
-    display: flex;
-    gap: 10px;
-  }
-  .config-input-group input {
-    flex: 1;
-    background: var(--uma-ink);
-    border: 1px solid var(--uma-line);
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-family: monospace;
-  }
-  .config-input-group button {
-    background: var(--uma-navy);
-    border: 1px solid var(--uma-line-light);
-    color: #fff;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .config-input-group button:hover {
-    background: var(--uma-red);
-    border-color: var(--uma-red);
-  }
-
   /* Top Navigation & Logo Oficial Grupo UMA */
   .header-top {
     display: flex;
@@ -207,17 +109,7 @@
     align-items: center;
     text-decoration: none;
   }
-  .brand-block .uma-brand-logo .logo-grupo {
-    font-family: "Barlow", sans-serif;
-    font-weight: 800;
-    font-size: 11px;
-    letter-spacing: 0.42em;
-    color: var(--uma-white);
-    text-transform: uppercase;
-    line-height: 1;
-    margin-bottom: 3px;
-    margin-left: 0.42em;
-  }
+  
   .brand-block .uma-brand-logo img {
     height: 38px;
     width: auto;
@@ -818,35 +710,10 @@
 
 <div class="wrap">
 
-  <!-- Barra de Configuración y Diagnóstico de Google Sheets -->
-  <div class="config-bar" id="statusBar">
-    <div class="status">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="statusText">Conectando con Google Sheets…</span>
-    </div>
-    <div style="display: flex; gap: 8px;">
-      <button class="btn-config" id="btnToggleConfig" type="button">⚙️ Configurar Google Sheet</button>
-    </div>
-  </div>
-
-  <!-- Panel desplegable para ingresar la URL de Google Apps Script Web App -->
-  <div class="config-panel" id="configPanel" hidden>
-    <h3>Conexión con Hoja de Cálculo Google Sheets</h3>
-    <p>Pega aquí la URL de tu aplicación web de Google Apps Script publicada (terminada en <code>/exec</code>). Las inscripciones y cupos se validarán y guardarán automáticamente en tu hoja.</p>
-    <div class="config-input-group">
-      <input type="text" id="cfgScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
-      <button type="button" id="btnSaveConfig">Guardar y Conectar</button>
-    </div>
-    <p style="margin-top: 10px; font-size: 12px; color: #878786;">
-      Archivo backend disponible en tu carpeta: <strong>Codigo_Google_Sheets_Rodada.gs</strong>
-    </p>
-  </div>
-
   <!-- Cabecera Corporativa con Logotipo Oficial Grupo UMA -->
   <nav class="header-top" aria-label="Cabecera institucional">
     <div class="brand-block">
       <div class="uma-brand-logo">
-        <span class="logo-grupo">GRUPO</span>
         <img src="data:image/png;base64,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" alt="Logotipo Oficial Grupo UMA">
       </div>
     </div>
@@ -1019,7 +886,6 @@
 
   <footer>
     <div>Rodada Medellín · Mirador La Quinta Porra · Grupo UMA © 2026</div>
-    <div>Manual de Identidad Visual Corporativa Grupo UMA</div>
   </footer>
 </div>
 
@@ -1028,11 +894,8 @@
   // =========================================================================
   // CONFIGURACIÓN DE CONEXIÓN CON GOOGLE SHEETS
   // =========================================================================
-  // Si deseas dejar la URL fija en el código, asígnala aquí:
-  var DEFAULT_SCRIPT_URL = ""; 
-  
-  // Obtenemos la URL guardada en localStorage o la predeterminada
-  var SCRIPT_URL = localStorage.getItem('UMA_RODADA_SCRIPT_URL') || DEFAULT_SCRIPT_URL;
+  // Pega aquí la URL de la Aplicación Web de Google Apps Script (terminada en /exec)
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTWsJNvmJrbchc9EJkWCR126hZf35HTWMXze3VNrA5NIbU94qIdbdTJztyl2HQC_WFEQ/exec";
   
   var TOTAL = 20;
   var HAS_GAS = typeof google !== 'undefined' && google.script && google.script.run;
@@ -1041,53 +904,7 @@
 
   var $ = function(id){ return document.getElementById(id); };
 
-  // UI de Configuración
-  var statusBar = $('statusBar');
-  var statusDot = $('statusDot');
-  var statusText = $('statusText');
-  var configPanel = $('configPanel');
-  var btnToggleConfig = $('btnToggleConfig');
-  var cfgScriptUrl = $('cfgScriptUrl');
-  var btnSaveConfig = $('btnSaveConfig');
 
-  if (SCRIPT_URL) {
-    cfgScriptUrl.value = SCRIPT_URL;
-  }
-
-  btnToggleConfig.addEventListener('click', function(){
-    configPanel.hidden = !configPanel.hidden;
-  });
-
-  btnSaveConfig.addEventListener('click', function(){
-    var val = cfgScriptUrl.value.trim();
-    if (val) {
-      localStorage.setItem('UMA_RODADA_SCRIPT_URL', val);
-      SCRIPT_URL = val;
-      configPanel.hidden = true;
-      actualizarEstadoConexion();
-      refresh();
-    } else {
-      localStorage.removeItem('UMA_RODADA_SCRIPT_URL');
-      SCRIPT_URL = "";
-      actualizarEstadoConexion();
-      refresh();
-    }
-  });
-
-  function actualizarEstadoConexion() {
-    if (HAS_GAS) {
-      statusDot.className = 'status-dot';
-      statusText.textContent = 'Modo Nativo: Conectado a Google Apps Script';
-      btnToggleConfig.hidden = true;
-    } else if (SCRIPT_URL && SCRIPT_URL.indexOf('http') === 0) {
-      statusDot.className = 'status-dot';
-      statusText.textContent = 'En línea: Sincronizado con Google Sheets Web App';
-    } else {
-      statusDot.className = 'status-dot warning';
-      statusText.textContent = 'Modo Demostración local (Configura tu URL de Google Apps Script arriba)';
-    }
-  }
-  actualizarEstadoConexion();
 
   // Simulación en memoria para cuando no se haya pegado la URL del Web App todavía
   var demo = {
