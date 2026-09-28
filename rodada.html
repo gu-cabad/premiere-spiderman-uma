@@ -728,7 +728,7 @@
       <span>Domingo 4 de octubre · 2026</span>
     </div>
     <h1>Rodada al mirador <span class="hl">La Quinta Porra</span></h1>
-    <p class="lede">Nos vemos en el punto de encuentro y subimos juntos al mirador. Cada cupo es para ti y tu acompañante: inscribe a los dos en un solo registro.</p>
+    <p class="lede">Nos vemos en el punto de encuentro y subimos juntos al mirador. Puedes inscribirte de forma individual (1 cupo) o con acompañante (2 cupos) en un solo registro.</p>
   </header>
 
   <!-- Datos del evento -->
@@ -762,7 +762,7 @@
         <span class="of">de <span id="nTotal">20</span></span>
       </div>
       <div class="people">
-        Quedan <strong id="nDisp">20</strong> cupos · <strong id="nLibres">40</strong> de 40 lugares disponibles · 1 cupo = 2 personas
+        Quedan <strong id="nDisp">20</strong> de <span id="nTotalText">20</span> cupos disponibles · 1 cupo por persona (individual o pareja)
       </div>
       <div class="bar"><i id="bar"></i></div>
       
@@ -779,8 +779,8 @@
 
     <section class="form" id="formPanel">
       <div id="formWrap">
-        <h2>Inscripción por pareja</h2>
-        <p class="intro">Llena tus datos y los de tu acompañante. Todos los campos son obligatorios.</p>
+        <h2>Formulario de inscripción</h2>
+        <p class="intro">Ingresa tus datos como titular. Si vas a asistir con acompañante, completa también sus datos (opcional).</p>
 
         <form id="form" novalidate>
           <fieldset>
@@ -812,30 +812,36 @@
           <div class="divider"></div>
 
           <fieldset>
-            <legend class="who"><span class="num">Acompañante</span>Su cupo</legend>
+            <legend class="who">
+              <span class="num">Acompañante</span>
+              Datos del acompañante <span style="font-size:14px;font-weight:600;color:var(--uma-muted);text-transform:none;letter-spacing:0;">(Opcional)</span>
+            </legend>
+            <p style="font-size:13px;color:var(--uma-muted);margin:-8px 0 16px;line-height:1.4;">
+              Si vas a asistir solo, deja estos campos vacíos (se reservará <strong>1 cupo</strong>). Si llevas acompañante, llena sus datos (se reservarán <strong>2 cupos</strong>).
+            </p>
             <div class="row">
               <div class="field full">
-                <label for="acompNombre">Nombre completo</label>
-                <input id="acompNombre" name="acompNombre" type="text" required placeholder="Nombre y apellidos">
+                <label for="acompNombre">Nombre completo <small style="color:var(--uma-muted);font-weight:400;text-transform:none;">(opcional)</small></label>
+                <input id="acompNombre" name="acompNombre" type="text" placeholder="Dejar vacío si vas solo">
               </div>
               <div class="field">
-                <label for="acompCedula">Cédula</label>
-                <input id="acompCedula" name="acompCedula" type="text" inputmode="numeric" required placeholder="Sin puntos ni comas">
+                <label for="acompCedula">Cédula <small style="color:var(--uma-muted);font-weight:400;text-transform:none;">(opcional)</small></label>
+                <input id="acompCedula" name="acompCedula" type="text" inputmode="numeric" placeholder="Sin puntos ni comas">
               </div>
               <div class="field">
-                <label for="acompTelefono">Celular</label>
-                <input id="acompTelefono" name="acompTelefono" type="tel" inputmode="tel" required placeholder="300 000 0000">
+                <label for="acompTelefono">Celular <small style="color:var(--uma-muted);font-weight:400;text-transform:none;">(opcional)</small></label>
+                <input id="acompTelefono" name="acompTelefono" type="tel" inputmode="tel" placeholder="300 000 0000">
               </div>
             </div>
           </fieldset>
 
           <label class="check" for="acepto">
             <input id="acepto" type="checkbox" required>
-            <span>Confirmo que asistiremos los dos, con casco certificado y documentos de la moto al día, y autorizo a Grupo UMA para el tratamiento de estos datos en la organización de la rodada.</span>
+            <span>Confirmo la asistencia a la rodada, con casco certificado y documentos de la moto al día, y autorizo a Grupo UMA para el tratamiento de estos datos en la organización del evento.</span>
           </label>
 
           <div class="err" id="err" role="alert" hidden></div>
-          <button class="btn" id="btn" type="submit">Reservar cupo para 2</button>
+          <button class="btn" id="btn" type="submit">Reservar 1 cupo (Solo piloto)</button>
         </form>
       </div>
 
@@ -851,6 +857,7 @@
           <dl>
             <dt>Titular</dt><dd id="tTitular"></dd>
             <dt>Acompañante</dt><dd id="tAcomp"></dd>
+            <dt>Cupos</dt><dd id="tCuposQty">1 cupo</dd>
             <dt>Fecha y Hora</dt><dd>Domingo 4 de octubre · 10:00 a.m.</dd>
             <dt>Punto de salida</dt><dd>Estación de servicio CC San Diego</dd>
             <dt>Destino</dt><dd>Mirador La Quinta Porra</dd>
@@ -879,8 +886,8 @@
       <p>Casco reglamentario certificado para piloto y acompañante, guantes, chaqueta, SOAT y revisión técnico-mecánica vigentes.</p>
     </div>
     <div>
-      <h4>Un registro por pareja</h4>
-      <p>Cada cédula solo puede inscribirse una vez (como titular o acompañante). El sistema valida duplicados en Google Sheets en tiempo real.</p>
+      <h4>Registro flexible</h4>
+      <p>Puedes asistir solo (1 cupo) o con acompañante (2 cupos). Cada cédula solo puede inscribirse una vez.</p>
     </div>
   </section>
 
@@ -1015,14 +1022,17 @@
     });
   }
 
-  // Construcción de los 20 cupos visuales
+  var mineSlots = [];
+
+  // Construcción de los 20 cupos visuales (1 slot = 1 cupo)
   var grid = $('grid');
   grid.innerHTML = '';
   for (var i = 1; i <= TOTAL; i++){
     var s = document.createElement('div');
     s.className = 'slot';
     s.id = 'slot-' + i;
-    s.innerHTML = '<span class="pair"><i></i><i></i></span><span>' + (i < 10 ? '0' + i : i) + '</span>';
+    // Icono individual de piloto/asistente por cupo
+    s.innerHTML = '<span class="pair"><i style="width:10px;height:10px;"></i></span><span>' + (i < 10 ? '0' + i : i) + '</span>';
     grid.appendChild(s);
   }
 
@@ -1035,15 +1045,15 @@
 
     $('nDisp').textContent = disponibles;
     $('nTotal').textContent = TOTAL;
+    if ($('nTotalText')) $('nTotalText').textContent = TOTAL;
     $('nUsados').textContent = usados;
-    $('nLibres').textContent = disponibles * 2;
     $('bar').style.width = ((usados / TOTAL) * 100) + '%';
 
     Array.prototype.forEach.call(grid.children, function(el, idx){
       var slotNum = idx + 1;
       var ocupado = idx < usados;
       el.classList.toggle('taken', ocupado);
-      el.classList.toggle('mine', mineSlot === slotNum);
+      el.classList.toggle('mine', mineSlots.indexOf(slotNum) !== -1);
       el.setAttribute('aria-label', 'Cupo ' + slotNum + (ocupado ? ' ocupado' : ' disponible'));
     });
 
@@ -1055,6 +1065,7 @@
       $('formWrap').hidden = true;
       $('soldout').hidden = false;
     }
+    actualizarTextoBoton();
   }
 
   // Sondeo periódico de cupos
@@ -1085,10 +1096,27 @@
     return String(v || '').replace(/\D/g, '');
   }
 
+  function tieneAcomp() {
+    var n = $('acompNombre').value.trim();
+    var c = $('acompCedula').value.trim();
+    var t = $('acompTelefono').value.trim();
+    return Boolean(n || c || t);
+  }
+
+  function actualizarTextoBoton() {
+    if (isSubmitting) return;
+    if (tieneAcomp()) {
+      btn.textContent = 'Reservar 2 cupos (Piloto + Acompañante)';
+    } else {
+      btn.textContent = 'Reservar 1 cupo (Solo piloto)';
+    }
+  }
+
   form.addEventListener('input', function(e){
     if (e.target.getAttribute('aria-invalid') === 'true') {
       e.target.removeAttribute('aria-invalid');
     }
+    actualizarTextoBoton();
   });
 
   form.addEventListener('submit', function(e){
@@ -1101,18 +1129,40 @@
       data[k] = $(k).value.trim();
     });
 
+    var conAcomp = tieneAcomp();
+    var cuposNecesarios = conAcomp ? 2 : 1;
+    var disp = parseInt($('nDisp').textContent, 10);
+
+    if (!isNaN(disp) && disp < cuposNecesarios) {
+      if (disp <= 0) {
+        showErr('Los cupos para la rodada ya se han agotado.');
+        return;
+      }
+      if (conAcomp && disp === 1) {
+        showErr('Solo queda 1 cupo disponible. Para asegurar el cupo restante, por favor inscríbete sin acompañante.');
+        return;
+      }
+    }
+
     var bad = [];
-    ['nombre', 'area', 'acompNombre'].forEach(function(k){
+    ['nombre', 'area'].forEach(function(k){
       if (!data[k]) bad.push(k);
     });
-    ['cedula', 'acompCedula'].forEach(function(k){
-      if (digits(data[k]).length < 5) bad.push(k);
-    });
-    ['telefono', 'acompTelefono'].forEach(function(k){
-      if (digits(data[k]).length < 7) bad.push(k);
-    });
+    if (digits(data.cedula).length < 5) bad.push('cedula');
+    if (digits(data.telefono).length < 7) bad.push('telefono');
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
       bad.push('email');
+    }
+
+    // El acompañante es OPCIONAL: solo se valida si el usuario empezó a llenar sus datos
+    if (conAcomp) {
+      if (!data.acompNombre) bad.push('acompNombre');
+      if (digits(data.acompCedula).length < 5) bad.push('acompCedula');
+      if (digits(data.acompTelefono).length < 7) bad.push('acompTelefono');
+    } else {
+      data.acompNombre = '';
+      data.acompCedula = '';
+      data.acompTelefono = '';
     }
 
     document.querySelectorAll('#form input').forEach(function(el){
@@ -1124,12 +1174,12 @@
     });
 
     if (bad.length) {
-      showErr('Por favor completa todos los campos requeridos correctamente marcados en rojo.');
+      showErr(conAcomp ? 'Por favor completa todos los campos requeridos del titular y acompañante marcados en rojo.' : 'Por favor completa los campos obligatorios del titular marcados en rojo.');
       $(bad[0]).focus();
       return;
     }
 
-    if (digits(data.cedula) === digits(data.acompCedula)) {
+    if (conAcomp && digits(data.cedula) === digits(data.acompCedula)) {
       $('acompCedula').setAttribute('aria-invalid', 'true');
       showErr('La cédula del acompañante debe ser diferente a la del titular.');
       return;
@@ -1148,11 +1198,16 @@
       .then(function(r){
         isSubmitting = false;
         if (r && r.ok) {
-          mineSlot = r.cupo;
+          mineSlots = r.cuposAsignados || (r.cupo ? [parseInt(r.cupo, 10)] : []);
           $('tId').textContent = r.id;
-          $('tCupo').textContent = 'Cupo ' + (r.cupo < 10 ? '0' + r.cupo : r.cupo) + ' de ' + TOTAL;
+          
+          var cupoLabel = r.cupo;
+          $('tCupo').textContent = 'Cupo(s) ' + cupoLabel + ' de ' + TOTAL;
           $('tTitular').textContent = r.titular;
-          $('tAcomp').textContent = r.acompanante;
+          $('tAcomp').textContent = (r.acompanante && r.acompanante !== 'Sin acompañante') ? r.acompanante : 'Sin acompañante (asistencia individual)';
+          if ($('tCuposQty')) {
+            $('tCuposQty').textContent = (r.cuposOcupados === 2 || conAcomp) ? '2 cupos (Piloto + Acompañante)' : '1 cupo (Solo piloto)';
+          }
 
           $('formWrap').hidden = true;
           $('done').hidden = false;
@@ -1162,14 +1217,14 @@
           showErr((r && r.error) || 'No se pudo completar la inscripción en Google Sheets.');
           if (r && r.cupos) render(r.cupos);
           btn.disabled = false;
-          btn.textContent = 'Reservar cupo para 2';
+          actualizarTextoBoton();
         }
       })
       .catch(function(err){
         isSubmitting = false;
-        showErr('Error al conectar con Google Sheets. Revisa la URL configurada o tu conexión a internet.');
+        showErr('Error al conectar con Google Sheets. Revisa tu conexión a internet.');
         btn.disabled = false;
-        btn.textContent = 'Reservar cupo para 2';
+        actualizarTextoBoton();
       });
   });
 })();
