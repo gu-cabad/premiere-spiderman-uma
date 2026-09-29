@@ -953,7 +953,7 @@
             reject(err);
           });
           return;
-        }} else if (action === 'registrar') {
+        } else if (action === 'registrar') {
           // Usamos POST con formato text/plain para evitar bloqueos por preflight OPTIONS de CORS en GAS
           fetch(SCRIPT_URL, {
             method: 'POST',
