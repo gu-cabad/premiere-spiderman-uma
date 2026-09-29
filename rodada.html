@@ -837,11 +837,11 @@
 
           <label class="check" for="acepto">
             <input id="acepto" type="checkbox" required>
-            <span>Confirmo la asistencia a la rodada, con casco certificado y documentos de la moto al día, y autorizo a Grupo UMA para el tratamiento de estos datos en la organización del evento.</span>
+            <span>Confirmo que asistiré con casco certificado y documentos de la moto al día, y autorizo a Grupo UMA para el tratamiento de estos datos en la organización de la rodada.</span>
           </label>
 
           <div class="err" id="err" role="alert" hidden></div>
-          <button class="btn" id="btn" type="submit">Reservar 1 cupo (Solo piloto)</button>
+          <button class="btn" id="btn" type="submit">Reservar ahora</button>
         </form>
       </div>
 
@@ -1105,11 +1105,7 @@
 
   function actualizarTextoBoton() {
     if (isSubmitting) return;
-    if (tieneAcomp()) {
-      btn.textContent = 'Reservar 2 cupos (Piloto + Acompañante)';
-    } else {
-      btn.textContent = 'Reservar 1 cupo (Solo piloto)';
-    }
+    btn.textContent = 'Reservar ahora';
   }
 
   form.addEventListener('input', function(e){
