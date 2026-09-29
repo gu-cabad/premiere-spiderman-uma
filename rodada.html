@@ -936,7 +936,8 @@
       // 2. Ejecución mediante Web App publicada de Google Apps Script
       if (SCRIPT_URL && SCRIPT_URL.indexOf('http') === 0) {
         if (action === 'getCupos') {
-          var getUrl = SCRIPT_URL + (SCRIPT_URL.indexOf('?') >= 0 ? '&' : '?') + 'action=getCupos&t=' + Date.now();
+          var cacheBlock = Math.floor(Date.now() / 15000);
+          var getUrl = SCRIPT_URL + (SCRIPT_URL.indexOf('?') >= 0 ? '&' : '?') + 'action=getCupos&cb=' + cacheBlock;
           fetch(getUrl, {
             method: 'GET',
             mode: 'cors',
@@ -1130,6 +1131,23 @@
     btn.textContent = 'Reservar ahora';
   }
 
+  // Restricciones automáticas de entrada según tipo de dato (solo números en cédula y celular)
+  ['cedula', 'acompCedula'].forEach(function(id){
+    var el = $(id);
+    if (!el) return;
+    el.addEventListener('input', function(){
+      this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+  });
+
+  ['telefono', 'acompTelefono'].forEach(function(id){
+    var el = $(id);
+    if (!el) return;
+    el.addEventListener('input', function(){
+      this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+  });
+
   form.addEventListener('input', function(e){
     if (e.target.getAttribute('aria-invalid') === 'true') {
       e.target.removeAttribute('aria-invalid');
@@ -1144,7 +1162,7 @@
 
     var data = {};
     ['nombre', 'cedula', 'telefono', 'email', 'acompNombre', 'acompCedula', 'acompTelefono'].forEach(function(k){
-      data[k] = $(k).value.trim();
+      data[k] = $(k) ? $(k).value.trim() : '';
     });
 
     var conAcomp = tieneAcomp();
@@ -1163,22 +1181,72 @@
     }
 
     var bad = [];
-    if (!data.nombre) bad.push('nombre');
-    if (digits(data.cedula).length < 5) bad.push('cedula');
-    if (digits(data.telefono).length < 7) bad.push('telefono');
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
-      bad.push('email');
+    var primerError = '';
+
+    // Validador 1: Nombre del Titular (Mínimo 6 letras, al menos nombre y apellido)
+    var nombreLimpio = data.nombre.replace(/\s+/g, ' ').trim();
+    var partesNombre = nombreLimpio.split(' ').filter(Boolean);
+    if (partesNombre.length < 2 || nombreLimpio.length < 6 || !/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/.test(nombreLimpio)) {
+      bad.push('nombre');
+      if (!primerError) primerError = 'Ingresa tu nombre y apellido completos (solo letras, mínimo 6 caracteres).';
     }
 
-    // El acompañante es OPCIONAL: solo se valida si el usuario empezó a llenar sus datos
+    // Validador 2: Cédula del Titular (Numérica, 6 a 11 dígitos)
+    var c1Digits = digits(data.cedula);
+    if (c1Digits.length < 6 || c1Digits.length > 11) {
+      bad.push('cedula');
+      if (!primerError) primerError = 'La cédula debe ser numérica y tener entre 6 y 11 dígitos.';
+    }
+
+    // Validador 3: Celular del Titular (10 dígitos, iniciando en 3)
+    var telDigits = digits(data.telefono);
+    if (!/^3\d{9}$/.test(telDigits)) {
+      bad.push('telefono');
+      if (!primerError) primerError = 'El celular del titular debe tener 10 dígitos y comenzar por 3 (ej. 300 123 4567).';
+    }
+
+    // Validador 4: Correo Electrónico
+    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(data.email)) {
+      bad.push('email');
+      if (!primerError) primerError = 'Ingresa un correo electrónico válido (ej. usuario@correo.com).';
+    }
+
+    // Validador 5: Datos del Acompañante (Opcional, pero estricto si se ingresa alguno)
     if (conAcomp) {
-      if (!data.acompNombre) bad.push('acompNombre');
-      if (digits(data.acompCedula).length < 5) bad.push('acompCedula');
-      if (digits(data.acompTelefono).length < 7) bad.push('acompTelefono');
+      var acompLimpio = data.acompNombre.replace(/\s+/g, ' ').trim();
+      var partesAcomp = acompLimpio.split(' ').filter(Boolean);
+      if (partesAcomp.length < 2 || acompLimpio.length < 6 || !/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/.test(acompLimpio)) {
+        bad.push('acompNombre');
+        if (!primerError) primerError = 'Ingresa el nombre y apellido completos de tu acompañante.';
+      }
+
+      var c2Digits = digits(data.acompCedula);
+      if (c2Digits.length < 6 || c2Digits.length > 11) {
+        bad.push('acompCedula');
+        if (!primerError) primerError = 'La cédula del acompañante debe tener entre 6 y 11 dígitos.';
+      }
+
+      if (c1Digits && c2Digits && c1Digits === c2Digits) {
+        bad.push('acompCedula');
+        if (!primerError) primerError = 'La cédula del acompañante debe ser diferente a la del titular.';
+      }
+
+      var acompTelDigits = digits(data.acompTelefono);
+      if (!/^3\d{9}$/.test(acompTelDigits)) {
+        bad.push('acompTelefono');
+        if (!primerError) primerError = 'El celular del acompañante debe tener 10 dígitos y comenzar por 3.';
+      }
     } else {
       data.acompNombre = '';
       data.acompCedula = '';
       data.acompTelefono = '';
+    }
+
+    // Validador 6: Checkbox de Aceptación Legal y Tratamiento de Datos
+    if (!$('acepto').checked) {
+      bad.push('acepto');
+      if (!primerError) primerError = 'Debes autorizar el tratamiento de datos y confirmar tu asistencia para continuar.';
     }
 
     document.querySelectorAll('#form input').forEach(function(el){
@@ -1186,25 +1254,24 @@
     });
 
     bad.forEach(function(k){
-      $(k).setAttribute('aria-invalid', 'true');
+      if ($(k)) $(k).setAttribute('aria-invalid', 'true');
     });
 
     if (bad.length) {
-      showErr(conAcomp ? 'Por favor completa todos los campos requeridos del titular y acompañante marcados en rojo.' : 'Por favor completa los campos obligatorios del titular marcados en rojo.');
-      $(bad[0]).focus();
+      showErr(primerError);
+      if ($(bad[0])) $(bad[0]).focus();
       return;
     }
 
-    if (conAcomp && digits(data.cedula) === digits(data.acompCedula)) {
-      $('acompCedula').setAttribute('aria-invalid', 'true');
-      showErr('La cédula del acompañante debe ser diferente a la del titular.');
-      return;
-    }
+    // Captura exacta del Timestamp y Consentimiento de Tratamiento de Datos
+    var ahora = new Date();
+    var pad = function(n){ return n < 10 ? '0' + n : n; };
+    var timestampStr = ahora.getFullYear() + '-' + pad(ahora.getMonth()+1) + '-' + pad(ahora.getDate()) + ' ' + pad(ahora.getHours()) + ':' + pad(ahora.getMinutes()) + ':' + pad(ahora.getSeconds());
 
-    if (!$('acepto').checked) {
-      showErr('Debes confirmar la asistencia y aceptar el tratamiento de datos para continuar.');
-      return;
-    }
+    data.autorizacionTratamiento = 'SÍ - ACEPTADO';
+    data.timestampAceptacion = timestampStr;
+    data.acepto = true;
+    data.cuposAReservar = cuposNecesarios;
 
     isSubmitting = true;
     btn.disabled = true;
