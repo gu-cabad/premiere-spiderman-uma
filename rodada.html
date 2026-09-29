@@ -1057,6 +1057,14 @@
       el.setAttribute('aria-label', 'Cupo ' + slotNum + (ocupado ? ' ocupado' : ' disponible'));
     });
 
+    try {
+      localStorage.setItem('uma_rodada_cupos_cache', JSON.stringify({
+        total: TOTAL,
+        usados: usados,
+        disponibles: disponibles
+      }));
+    } catch(e) {}
+
     var now = new Date();
     var timeStr = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     $('updated').textContent = 'Sincronizado con Sheets: ' + timeStr;
@@ -1068,19 +1076,37 @@
     actualizarTextoBoton();
   }
 
-  // Sondeo periódico de cupos
+  // 1. Carga instantánea de caché local (0 ms de espera al abrir la página)
+  try {
+    var localCached = localStorage.getItem('uma_rodada_cupos_cache');
+    if (localCached) {
+      var parsedCache = JSON.parse(localCached);
+      render(parsedCache);
+    }
+  } catch(e) {}
+
+  // 2. Sondeo secuencial controlado (evita congestión de peticiones simultáneas)
+  var isRefreshing = false;
   function refresh() {
+    if (isRefreshing) return;
+    isRefreshing = true;
+
     callAPI('getCupos')
       .then(function(res){
         render(res.cupos || res);
       })
       .catch(function(err){
-        $('updated').textContent = 'Error al consultar Google Sheets. Reintentando…';
+        console.warn('Error en sincronización con Sheets:', err);
+      })
+      .finally(function(){
+        isRefreshing = false;
+        // Se programa la siguiente consulta 25 segundos después de terminar la actual
+        setTimeout(refresh, 25000);
       });
   }
 
+  // Primera sincronización en segundo plano
   refresh();
-  setInterval(refresh, 15000); // Consulta cada 15 segundos
 
   // Validación y envío del formulario
   var form = $('form');
